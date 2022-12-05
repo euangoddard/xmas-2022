@@ -1,0 +1,15 @@
+.line {
+  margin: 0 0 0.5rem;
+  font-size: 1.25rem;
+}
+
+.word {
+  display: inline-block;
+  margin-inline-end: 0.5ch;
+  opacity: 0;
+  transition: opacity ease-out 500ms;
+}
+
+.visible {
+  opacity: 1;
+}

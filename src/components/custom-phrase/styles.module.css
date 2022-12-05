@@ -1,0 +1,7 @@
+.phraseContainer {
+  display: inline-flex;
+}
+
+.input {
+  max-width: 15ch;
+}
