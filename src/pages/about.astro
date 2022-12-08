@@ -1,0 +1,48 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="About">
+  <main>
+    <h1>About this Chriatmas card</h1>
+    <p>
+      This card uses <a href="https://openai.com/" target="_blank">OpenAI</a>'s <strong
+        >text-davinci-3</strong
+      > language model to provide text completions based off the prompt provided.
+    </p>
+    <p>
+      It is written using <a href="https://astro.build" target="_blank">Astro</a
+      > for static content build and API routes. The UI uses <a
+        href="https://preactjs.com/"
+        target="_blank">Preact</a
+      > and is written in TypeScript (it initially used <a
+        href="https://www.solidjs.com/"
+        target="_blank">SolidJS</a
+      > but I ran out of time/patience!). The source code is available on <a
+        href="https://github.com/euangoddard/xmas-2022"
+        target="_blank">GitHub</a
+      >.
+    </p>
+    <p><a href="/">Back to the card</a></p>
+  </main>
+</Layout>
+
+<style>
+  main {
+    margin: auto;
+    padding: 1.5rem;
+    max-width: 65ch;
+    font-size: 16px;
+  }
+  h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    margin: 0;
+    text-align: center;
+    margin: 0 0 1em;
+  }
+  p {
+    font-size: 24px;
+    line-height: 1.5;
+  }
+</style>

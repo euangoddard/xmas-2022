@@ -10,12 +10,15 @@ import Layout from "../layouts/Layout.astro";
     </h1>
     <SongGenerator client:load />
   </main>
+  <footer>
+    <a href="/about">About</a>
+  </footer>
 </Layout>
 
 <style>
   main {
     margin: auto;
-    padding: 1.5rem;
+    padding: 1.5rem 1.5rem 3rem;
     max-width: 65ch;
     font-size: 16px;
   }
@@ -33,5 +36,13 @@ import Layout from "../layouts/Layout.astro";
     -webkit-text-fill-color: transparent;
     background-size: 400%;
     background-position: 0%;
+  }
+  footer {
+    position: fixed;
+    width: 100%;
+    left: 0;
+    bottom: 0;
+    padding: 1.5rem;
+    text-align: center;
   }
 </style>
