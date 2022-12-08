@@ -1,20 +1,8 @@
-import {
-  Accessor,
-  Component,
-  createEffect,
-  createResource,
-  createSignal,
-  Setter,
-} from "solid-js";
-import type { Song } from "../../models/song";
+import { effect, useSignal } from "@preact/signals";
+import type { FunctionalComponent } from "preact";
+import { useEffect, useRef } from "preact/hooks";
+import { isLoading, showCustom, song } from "../signals";
 import styles from "./styles.module.css";
-
-interface CustomPhraseProps {
-  setShowCustom: Setter<boolean>;
-  setSong: Setter<Song>;
-  setIsLoading: Setter<boolean>;
-  isLoading: Accessor<boolean>;
-}
 
 async function fetchSong(phrase: string): Promise<string> {
   if (!phrase) {
@@ -30,40 +18,28 @@ async function fetchSong(phrase: string): Promise<string> {
 
 let newSongId = 1000;
 
-export const CustomPhrase: Component<CustomPhraseProps> = ({
-  setShowCustom,
-  setSong,
-  setIsLoading,
-  isLoading,
-}) => {
-  const [phrase, setPhrase] = createSignal("");
+export const CustomPhrase: FunctionalComponent = () => {
+  const phrase = useSignal("");
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
-  const [data] = createResource(phrase, fetchSong);
-
-  createEffect(() => {
-    const latestSong = data();
-    if (latestSong) {
-      setSong({
-        song: latestSong,
-        prompt: phrase(),
-        id: ++newSongId,
-      });
+  useEffect(() => {
+    if (phrase.value) {
+      song.value = null;
+      isLoading.value = true;
     }
-  });
-
-  createEffect(() => {
-    data();
-    if (data.loading) {
-      setIsLoading(true);
-    } else {
-      setIsLoading(false);
-    }
-  });
-
-  let inputRef: HTMLInputElement;
+    fetchSong(phrase.value)
+      .then((latestSong) => {
+        song.value = {
+          song: latestSong,
+          prompt: phrase.value,
+          id: ++newSongId,
+        };
+      })
+      .finally(() => (isLoading.value = false));
+  }, [phrase.value]);
 
   const getSongForCustomPhrase = () => {
-    setPhrase(inputRef!.value.trim());
+    phrase.value = inputRef.current?.value.trim() ?? "";
   };
 
   return (
@@ -72,17 +48,23 @@ export const CustomPhrase: Component<CustomPhraseProps> = ({
         class={styles.input}
         type="text"
         placeholder="your phrase"
-        ref={inputRef!}
-        disabled={isLoading()}
+        ref={inputRef}
+        disabled={isLoading.value}
+        onKeyDown={(e) => {
+          if (e.key == "Enter") {
+            e.preventDefault();
+            getSongForCustomPhrase();
+          }
+        }}
       />
       <button
         type="button"
         onClick={() => getSongForCustomPhrase()}
-        disabled={isLoading()}
+        disabled={isLoading.value}
       >
         Go
       </button>
-      <button type="button" onClick={() => setShowCustom(false)}>
+      <button type="button" onClick={() => (showCustom.value = false)}>
         &times;
       </button>
     </div>

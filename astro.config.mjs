@@ -1,10 +1,12 @@
 import { defineConfig } from "astro/config";
+import preact from "@astrojs/preact";
 
 // https://astro.build/config
-import solidJs from "@astrojs/solid-js";
+import netlify from "@astrojs/netlify/functions";
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [solidJs()],
+  integrations: [preact()],
   output: "server",
+  adapter: netlify(),
 });

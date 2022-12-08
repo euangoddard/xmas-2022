@@ -11,9 +11,12 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/solid-js": "^1.2.3",
+    "@astrojs/netlify": "^1.2.1",
+    "@astrojs/preact": "^1.2.0",
+    "@preact/signals": "^1.1.2",
     "astro": "^1.6.10",
+    "classnames": "^2.3.2",
     "openai": "^3.1.0",
-    "solid-js": "^1.6.2"
+    "preact": "^10.11.3"
   }
 }

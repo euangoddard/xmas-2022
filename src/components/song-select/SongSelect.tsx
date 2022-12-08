@@ -1,30 +1,20 @@
-import { Accessor, Component, For, Setter } from "solid-js";
-import type { Song, Songs } from "../../models/song";
-
-interface SongSelectProps {
-  songs: Accessor<Songs>;
-  setSong: Setter<Song | null>;
-  setShowCustom: Setter<boolean>;
-}
+import type { FunctionalComponent } from "preact";
+import { showCustom, song, songs } from "../signals";
 
 const customSongId = -1;
 
-export const SongSelect: Component<SongSelectProps> = ({
-  songs,
-  setSong,
-  setShowCustom,
-}) => {
+export const SongSelect: FunctionalComponent = () => {
   const setSongFromEvent = (e: Event) => {
     const id = parseInt((e.target as HTMLSelectElement).value, 10);
     if (!id) {
-      setSong(null);
+      song.value = null;
     } else if (id === customSongId) {
-      setSong(null);
-      setShowCustom(true);
+      song.value = null;
+      showCustom.value = true;
     } else {
-      const newSong = songs().find((song) => song.id === id);
+      const newSong = songs.value.find((song) => song.id === id);
       if (newSong) {
-        setSong(() => newSong);
+        song.value = newSong;
       }
     }
   };
@@ -32,9 +22,9 @@ export const SongSelect: Component<SongSelectProps> = ({
     <select onChange={setSongFromEvent} style={{ "font-size": "inherit" }}>
       <option value={0}>Choose a phrase</option>
       <optgroup label="Existing">
-        <For each={songs()}>
-          {(song) => <option value={song.id}>{song.prompt}</option>}
-        </For>
+        {songs.value.map((s) => (
+          <option value={s.id}>{s.prompt}</option>
+        ))}
       </optgroup>
       <option value={customSongId}>Custom&hellip;</option>
     </select>
