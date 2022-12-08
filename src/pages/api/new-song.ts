@@ -4,13 +4,20 @@ import { Configuration, OpenAIApi } from "openai";
 export const post: APIRoute = async ({ request }) => {
   const body = await request.json();
   const { phrase } = body;
-  const song = await getOpenAIResponse(phrase);
-  return {
-    body: JSON.stringify({
-      phrase,
-      song,
-    }),
-  };
+  try {
+    const song = await getOpenAIResponse(phrase);
+    return {
+      body: JSON.stringify({
+        phrase,
+        song,
+      }),
+    };
+  } catch (e: any) {
+    return {
+      body: e.message,
+      status: 500,
+    };
+  }
 };
 
 const getOpenAIResponse = async (phrase: string) => {
@@ -31,9 +38,12 @@ const getOpenAIResponse = async (phrase: string) => {
     if (error.response) {
       console.log(error.response.status);
       console.log(error.response.data);
+      throw new OpenAIError(`${error.response.status}: ${error.response.data}`);
     } else {
       console.log(error.message);
+      throw new OpenAIError(error.message);
     }
-    return "";
   }
 };
+
+class OpenAIError extends Error {}
