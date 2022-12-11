@@ -1,4 +1,4 @@
-import { effect, useSignal } from "@preact/signals";
+import { useSignal } from "@preact/signals";
 import type { FunctionalComponent } from "preact";
 import { useEffect, useRef } from "preact/hooks";
 import { error, isLoading, showCustom, song } from "../signals";
