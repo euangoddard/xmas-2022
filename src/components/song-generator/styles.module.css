@@ -34,3 +34,11 @@
   font-size: 3em;
   text-align: center;
 }
+
+.error {
+  background-color: #e73c7e;
+  color: #fff;
+  padding: 1.5rem;
+  font-weight: 500;
+  text-align: center;
+}

@@ -1,7 +1,7 @@
 import { effect, useSignal } from "@preact/signals";
 import type { FunctionalComponent } from "preact";
 import { useEffect, useRef } from "preact/hooks";
-import { isLoading, showCustom, song } from "../signals";
+import { error, isLoading, showCustom, song } from "../signals";
 import styles from "./styles.module.css";
 
 async function fetchSong(phrase: string): Promise<string> {
@@ -12,8 +12,13 @@ async function fetchSong(phrase: string): Promise<string> {
     method: "POST",
     body: JSON.stringify({ phrase }),
   });
-  const { song } = await response.json();
-  return Promise.resolve(song);
+
+  if (response.ok) {
+    const { song } = await response.json();
+    return song;
+  } else {
+    throw new Error(await response.text());
+  }
 }
 
 let newSongId = 1000;
@@ -23,18 +28,24 @@ export const CustomPhrase: FunctionalComponent = () => {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
+    error.value = "";
     if (phrase.value) {
       song.value = null;
       isLoading.value = true;
     }
     fetchSong(phrase.value)
-      .then((latestSong) => {
-        song.value = {
-          song: latestSong,
-          prompt: phrase.value,
-          id: ++newSongId,
-        };
-      })
+      .then(
+        (latestSong) => {
+          song.value = {
+            song: latestSong,
+            prompt: phrase.value,
+            id: ++newSongId,
+          };
+        },
+        (err: any) => {
+          error.value = err.message;
+        }
+      )
       .finally(() => (isLoading.value = false));
   }, [phrase.value]);
 

@@ -3,7 +3,7 @@ import { useEffect } from "preact/hooks";
 import type { Songs } from "../../models/song";
 import { CustomPhrase } from "../custom-phrase/CustomPhrase";
 import { Show } from "../show/Show";
-import { isLoading, showCustom, song, songs } from "../signals";
+import { error, isLoading, showCustom, song, songs } from "../signals";
 import { SongSelect } from "../song-select/SongSelect";
 import { SongText } from "../song-text/SongText";
 import styles from "./styles.module.css";
@@ -29,6 +29,9 @@ export const SongGenerator: FunctionalComponent = () => {
           <CustomPhrase />
         </Show>
       </h2>
+      <Show when={!!error.value}>
+        <div class={styles.error}>{error}</div>
+      </Show>
       <Show when={!!song.value}>
         <SongText />
       </Show>

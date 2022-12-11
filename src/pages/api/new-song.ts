@@ -13,10 +13,9 @@ export const post: APIRoute = async ({ request }) => {
       }),
     };
   } catch (e: any) {
-    return {
-      body: e.message,
+    return new Response(e.message, {
       status: 500,
-    };
+    });
   }
 };
 
